@@ -2,6 +2,7 @@ import docker
 import tempfile
 import os
 import time
+from pathlib import Path
 
 from docker.errors import ImageNotFound, APIError
 from pathlib import Path
@@ -23,7 +24,7 @@ LANGUAGE_CONFIG = {
     Language.PYTHON: {
         "image": "my-python-runner",
         "filename": "solution.py",
-        "run_cmd": "python solution.py",
+        "run_cmd": "python runner.py",
         "compile_cmd": None,
     },
     Language.JAVASCRIPT: {
@@ -93,6 +94,21 @@ class DockerExecutionService:
 
             with open(code_path, "w", encoding="utf-8") as f:
                 f.write(code)
+
+            # -------------------------------
+            # Create runner.py only for Python
+            # -------------------------------
+            if language == Language.PYTHON:
+                runner_template = (
+                    Path(__file__).parent.parent
+                    / "templates"
+                    / "python_runner.py"
+                ).read_text(encoding="utf-8")
+
+                runner_path = os.path.join(tmpdir, "runner.py")
+
+                with open(runner_path, "w", encoding="utf-8") as f:
+                    f.write(runner_template)
 
             # Save stdin for debugging / persistence
             stdin_path = os.path.join(
@@ -340,6 +356,7 @@ class DockerExecutionService:
 
         ignored = {
             source_filename,
+            "runner.py",
             "stdin.txt",
         }
 

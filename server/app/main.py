@@ -43,6 +43,14 @@ app.include_router(execute.router, prefix="/api/v1", tags=["Execution"])
 app.include_router(files.router, prefix="/api/v1", tags=["Files"])
 
 
+@app.get("/")
+async def init():
+    return{
+        "msg": "hello World!"
+    }
+
+
+
 @app.on_event("startup")
 async def startup_event():
     logger.info("🚀 CodeX Execution Engine is starting up...")

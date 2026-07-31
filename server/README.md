@@ -165,3 +165,7 @@ To add a new language (e.g., Go):
 1. Add entry to `LANGUAGE_CONFIG` in `docker_service.py`
 2. Add `"go"` to the `Language` enum in `schemas.py`
 3. That's it — no other changes needed
+
+
+uvicorn app.main:app --reload --reload-dir app
+uvicorn app.main:app --reload --reload-exclude workspaces
