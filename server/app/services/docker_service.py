@@ -100,9 +100,7 @@ class DockerExecutionService:
             # -------------------------------
             if language == Language.PYTHON:
                 runner_template = (
-                    Path(__file__).parent.parent
-                    / "templates"
-                    / "python_runner.py"
+                    Path(__file__).parent.parent / "templates" / "python_runner.py"
                 ).read_text(encoding="utf-8")
 
                 runner_path = os.path.join(tmpdir, "runner.py")
@@ -347,6 +345,32 @@ class DockerExecutionService:
                 except Exception:
                     pass
 
+    # def _get_generated_files(
+    #     self,
+    #     workspace: Path,
+    #     source_filename: str,
+    # ):
+    #     logger.info(f"Scanning workspace: {workspace}")
+
+    #     ignored = {
+    #         source_filename,
+    #         "runner.py",
+    #         "stdin.txt",
+    #     }
+
+    #     files = []
+
+    #     for file in workspace.iterdir():
+
+    #         logger.info(f"Found file: {file.name}")
+
+    #         if file.is_file() and file.name not in ignored:
+    #             files.append(file.name)
+
+    #     logger.info(f"Generated files: {files}")
+
+    #     return files
+
     def _get_generated_files(
         self,
         workspace: Path,
@@ -362,12 +386,19 @@ class DockerExecutionService:
 
         files = []
 
-        for file in workspace.iterdir():
+        for file in workspace.rglob("*"):
 
-            logger.info(f"Found file: {file.name}")
+            if not file.is_file():
+                continue
 
-            if file.is_file() and file.name not in ignored:
-                files.append(file.name)
+            if file.name in ignored:
+                continue
+
+            logger.info(
+                f"Generated file: {file} | " f"size={file.stat().st_size} bytes"
+            )
+
+            files.append(str(file.relative_to(workspace)))
 
         logger.info(f"Generated files: {files}")
 

@@ -48,7 +48,7 @@ POST /api/v1/execute
 ### Run with Docker Compose
 ```bash
 git clone <repo>
-cd code-exec-backend
+cd server
 
 docker compose up --build
 ```
@@ -169,3 +169,17 @@ To add a new language (e.g., Go):
 
 uvicorn app.main:app --reload --reload-dir app
 uvicorn app.main:app --reload --reload-exclude workspaces
+
+
+**Python Graph Demo:**
+
+```python
+import matplotlib.pyplot as plt
+
+plt.plot([1, 2, 3, 4], [1, 4, 9, 16])
+plt.title("Docker Test Graph")
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.grid(True)
+
+plt.savefig("graph.png")

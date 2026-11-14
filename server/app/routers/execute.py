@@ -30,7 +30,9 @@ async def execute_code(
     - **stdin**: Optional standard input to pipe into the program
     - **timeout**: Max seconds to allow (1–30, default 10)
     """
-    logger.info(f"📥 Execution request | language={request.language} | timeout={request.timeout}s")
+    logger.info(
+        f"Execution request | language={request.language} | timeout={request.timeout}s"
+    )
 
     try:
         result = service.execute(
@@ -39,11 +41,15 @@ async def execute_code(
             stdin=request.stdin or "",
             timeout=request.timeout or 10,
         )
-        logger.info(f"✅ Execution complete | status={result.status} | time={result.execution_time_ms:.1f}ms")
+        logger.info(
+            f"Execution complete | status={result.status} | time={result.execution_time_ms:.1f}ms"
+        )
         return result
     except RuntimeError as e:
-        logger.error(f"❌ Docker runtime error: {e}")
+        logger.error(f"Docker runtime error: {e}")
         raise HTTPException(status_code=503, detail=str(e))
     except Exception as e:
-        logger.error(f"❌ Unexpected error during execution: {e}")
-        raise HTTPException(status_code=500, detail="Internal server error during code execution")
+        logger.error(f"Unexpected error during execution: {e}")
+        raise HTTPException(
+            status_code=500, detail="Internal server error during code execution"
+        )
